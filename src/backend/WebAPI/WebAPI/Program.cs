@@ -1,25 +1,31 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using WebAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add env var to configuration
+builder.Configuration.AddEnvironmentVariables("TASKLIST_");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger(builder.Configuration);
 
 var app = builder.Build();
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerWeb(app.Services.GetService<IApiVersionDescriptionProvider>());
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Run();
