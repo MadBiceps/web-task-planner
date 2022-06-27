@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using WebAPI.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+
+/*var builder = WebApplication.CreateBuilder(args);
 
 // Add env var to configuration
 builder.Configuration.AddEnvironmentVariables("TASKLIST_");
@@ -28,4 +27,21 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-app.Run();
+app.Run();*/
+
+namespace WebAPI;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).ConfigureAppConfiguration(config => {
+            // Set env var
+            config.AddEnvironmentVariables("META_");
+        }).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+}

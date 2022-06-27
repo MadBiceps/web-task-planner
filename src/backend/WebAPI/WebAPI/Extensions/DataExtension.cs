@@ -14,7 +14,7 @@ namespace WebAPI.Extensions;
 
 public static class DataExtension
 {
-    public static void AddDataProviders(this IServiceCollection services, string connectionString)
+    public static void AddDataProviders(this IServiceCollection services)
     {
         services.AddDbContext<DatabaseContext>(opt =>
         {
@@ -26,6 +26,9 @@ public static class DataExtension
 
         // Migrate Database
         var context = services.BuildServiceProvider().GetService<DatabaseContext>();
+        
+        // Register Services
+        services.AddProviders();
     }
 
     public static void UseSwaggerWeb(this IApplicationBuilder app, IApiVersionDescriptionProvider? provider)
@@ -44,7 +47,7 @@ public static class DataExtension
         });
     }
 
-    public static void ConfigureSwagger(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void ConfigureSwagger(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddApiVersioning(options =>
         {
